@@ -5,6 +5,7 @@ jQuery funy autocomple
 Dependencies : jquery.1.8
 
 example :
+<code>
 <html>
 <head>
 <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></scipt>
@@ -48,3 +49,4 @@ example :
 </script>
 </body>
 </html>
+</code>
