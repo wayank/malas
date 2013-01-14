@@ -1,0 +1,136 @@
+// JavaScript Document
+;(function( $ ){
+  $.fn.maxWidth = function() {
+    var max = 0;
+    this.each(function() {
+      max = Math.max( max, $(this).width() );
+    });
+    return max;
+  };
+})( jQuery );
+
+
+/*
+next project
+*/
+;(function( $ ){
+  $.fn.malas = function(data,opt){
+		var iki = this;
+		var aturan = $.extend({
+			'kolom':0,
+			'clorot':500,
+			'items':{
+				'namaclass':'wayank82-x-item',
+				'tampilan':{
+					'umum':'background-color:orange; padding:0 2px; cursor:default;',
+					'sorot':'background-color:orange'
+				}
+			},
+			'wadah':{
+				'namaclass':'wayank82',
+				'tampilan':{
+					'umum':'background-color:#0FF;padding:2px; border:thin solid #999; border-radius:4px; position:absolute; z-index:100; font-size:12px;',
+					'sorot':'2px'
+				}
+			}
+		},opt);
+		/*==================================================*/ // 
+		var gayaUL='list-style-type:none; margin:0; padding:0; display:none;';
+		
+		
+		return this.each(function(id, ele){
+			/*==================================================*/
+			//saat pengguna mengetikkan sesuatu kedalam inputbox//
+			/*========================**01**=======================*/
+			//iki.bind('keyup',function(){
+			iki.keyup(function(){
+				var id;
+				var id2;
+				if(aturan.kolom == 0 || aturan.kolom == ''){
+					id = $(this).index() -1;
+					id2 = $(this).index();
+				}else{
+					id = aturan.kolom;
+					id2 = aturan.kolom;
+				}
+				
+				
+				$("."+aturan.wadah.namaclass).remove();
+				var dudul = $(this).val();
+				if(dudul.length < 1) return false;
+				var ul; var li; var span; var spanteks;
+				var jrk = $(this).offset();
+				var ww = $(window).width();
+				var px = jrk.left / ww * 100;
+				var  kiri = 'left: '+ jrk.left+'px;';
+				gayaUL+=kiri;
+				
+				/*========================**01-1**=======================*/
+				ul = document.createElement('ul');
+				var mal = new RegExp(dudul,'i');
+				//start for #001
+				var entuk=0;
+				for(var i=0; i < data.length ;i++){
+					if(mal.test(data[i][id]) == true){ 
+						li = document.createElement('li');
+
+						for(var j=0;j<data[i].length;j++){
+							entuk++;
+							span = document.createElement('span');
+							spanteks = document.createTextNode(data[i][j]);
+							span.appendChild(spanteks);
+							$(span).attr({'style':'padding:3px; display:inline-block;',
+							'class':'wayank82-x-item-child'});
+							li.appendChild(span);
+							$(li).attr({'style':aturan.items.tampilan.umum,'class':aturan.items.namaclass});
+						}
+						ul.appendChild(li);
+					}
+					
+				}//end for var i :#001  ;width:200px
+				
+				$(ul).attr({'style':gayaUL+aturan.wadah.tampilan.umum,'class':aturan.wadah.namaclass});
+				if(entuk < 1)return false;
+				$(this).after(ul);				
+				$('.wayank82-x-item-child').not(':last-child').css({'border-right':'thin solid #999'});
+				$('li.'+aturan.items.namaclass).not(':last-child').css({'margin-bottom':'2px'});
+
+				$('.wayank82-x-item-child:nth-child('+(id2)+')').css({'background-color':'red'});
+				/*========================**01-1**=======================*/
+				
+				$("."+aturan.wadah.namaclass).slideDown(aturan.clorot);
+
+				var LiIki = $('.'+aturan.items.namaclass+':nth-child(1)').children().length;
+				for(var y = 0; y < LiIki ;y++){
+					var asd = $('.wayank82-x-item-child:nth-child('+(y+1)+')').maxWidth();
+					$('.wayank82-x-item-child:nth-child('+(y+1)+')').width(asd);
+				}
+				
+				$('li.'+aturan.items.namaclass).click(function(){
+					var babon = this; 
+					$(iki).each(function(ind,ele){  
+					  $(ele).val($(babon).children('span:nth-child('+(ind+1)+')').text());
+					});
+					$('ul.'+aturan.wadah.namaclass).slideUp('slow',function(){$(this).remove()});					
+				}).mouseout(function(){
+					$(this).css({'background-color':'orange'});
+					$(this).children('.wayank82-x-item-child:nth-child('+(id2)+')').css({'background-color':'red'});
+				}).mouseover(function(){
+					$(this).css({'background-color':'#FF0'});
+					$(this).children('.wayank82-x-item-child:nth-child('+(id2)+')').css({'background-color':'#f09'});
+				});
+			});
+			/*========================**01**=======================*/
+			/*==================================================*/
+			
+			iki.focusout(function(){
+	  			$("."+aturan.wadah.namaclass).slideUp(aturan.clorot,function(){
+					$(this).remove();
+				});
+			});
+			
+			/*==================================================*/
+			
+		});
+	};
+})(jQuery);
